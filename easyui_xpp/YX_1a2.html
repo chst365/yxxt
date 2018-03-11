@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>管理意向学员</title>
+
+    <script type="text/javascript" src="jquery-easyui-136/jquery.min.js"></script>
+    <script type="text/javascript" src="../xppjs/jquery.cookie.js"></script>
+    <script type="text/javascript" src="jquery-easyui-136/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="jquery-easyui-136/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="DataTables/datatables.js"></script>
+    <script type="text/javascript" src="DataTables/Buttons-1.4.2/js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="../xppjs/jquery.serialize-object.js"></script>
+
+    <link   rel="stylesheet" type="text/css" href="jquery-easyui-136/themes/gray/easyui.css"/>
+    <link   rel="stylesheet" type="text/css" href="jquery-easyui-136/themes/icon.css"/>
+    <link   rel="stylesheet" type="text/css" href="DataTables/datatables.css"/>
+    <link   rel="stylesheet" type="text/css" href="DataTables/Buttons-1.4.2/css/buttons.dataTables.css"/>
+    <link   rel="stylesheet" type="text/css" href="../HMcode_YX/HMcss/1a2.css"/>
+
+    <style>
+        .dataTables_wrapper{
+            margin-top:-67px;
+        }
+        .dataTables_wrapper .dataTables_info{
+            clear: none;
+            float: right;
+            padding-right: 20px;
+            margin-top:20px;
+        }
+        .dataTables_wrapper .dataTables_paginate{
+            float: right;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button{
+            border:1px solid transparent;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+            border:1px solid transparent;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:active{
+            box-shadow: none;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
+            border:1px solid transparent;
+        }
+        table.dataTable.display tbody tr.even td.sorting_1{
+            background-color: white;
+        }
+        .name-s{
+            padding-left: 70px;
+        }
+
+
+    </style>
+
+
+
+    <!-- <script src="../js/jquery-1.8.2.js" type="text/javascript"></script> -->
+
+
+    <script type="text/javascript">
+      var NameOfCookie="rsList";
+      var c = document.cookie.indexOf(NameOfCookie+"=");
+      if (c != -1)
+      {
+        console.log("第一次js检测已经登陆");
+      }
+      else
+      {
+        alert("没有登陆");
+        window.location.href="../login.html";
+      }
+      $(document).ready(function() {
+
+        var NameOfCookie = "rsList";
+        var c = document.cookie.indexOf(NameOfCookie + "=");
+        // alert(c);
+        if (c != -1) {
+          //判断已经退出登陆
+          if ($.cookie("rsList") == "") {
+            console.log("检测没有权限，重新登录或联系管理员");
+            window.location.href = "../login.html";
+          }
+          console.log("jquery里检测已经登陆");
+        }
+        else {
+          console.log("jquery里检测没有登陆");
+          window.location.href = "../login.html";
+        }
+        //按钮权限开始
+        function funBtn(){
+          $( "#opener" ).hide();
+          $( "#delbut" ).hide();
+          $( "#genjin" ).hide();
+          var viewArr = $.cookie("rsList").split(",");
+          for (var i = 0; i < viewArr.length; i++) {
+            if(viewArr[i]=="Ab1") {$( "#opener" ).show();}
+            if(viewArr[i]=="Ab2") {$( "#genjin" ).show();}
+            if(viewArr[i]=="Ab3") {$( "#delbut" ).show();}
+          }//end for
+        }
+        funBtn();
+          /*第零步：把datatables插件的警告窗变成控制台打印*/
+        $.fn.dataTable.ext.errMode = 'none';
+        var tabShowText;
+        //步骤1,展示列表数据
+        var table = $('#example').DataTable( {
+          "dom":'frtpi',
+          "order": [[ 1, "desc" ]],
+          "bLengthChange":false,
+          bSort:true,
+          language: {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "共 _TOTAL_ 项",
+            "sInfoEmpty": "共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+              "sFirst": "首页",
+              "sPrevious": "上页",
+              "sNext": "下页",
+              "sLast": "末页"
+            },
+            "oAria": {
+              "sSortAscending": ": 以升序排列此列",
+              "sSortDescending": ": 以降序排列此列"
+            }
+          },//国际化语言结束
+          "ajax": "/YXcrm/aaYXstudent?qqiu=list",
+          "columns": [
+            { "data": "name" },
+            { "data": "studentID" },
+            { "data": "empName" },
+            { "data": "phone" },
+            { "data": "parentPhone" },
+            { "data": "rank" },
+            {
+              "data": null,
+              "searchable": true,
+              "title": "状态"
+            }
+            // { "data": "address" }
+          ],
+          "columnDefs":[{
+            "targets": -1,
+            "data": tabShowText,
+            "name": "状态",
+            "cellType": "th",
+            "orderDataType": "dom-text",
+            "orderSequence": [ "desc","asc", "asc" ],
+            "className": "my_class",
+            "contentPadding": "mmm",
+            "createdCell": function (td, cellData, rowData, row, col) {
+//                console.log( cellData.openAndclose);
+              if ( cellData.openAndclose == 'open' ) {
+                tabShowText = '已开启';
+                $(td).context.innerHTML="<button style='color: white;border:none;border-radius: 5px;background-color: #36cb91;line-height: 30px;text-align: center;width: 100px;font-size: 14px;'>"+ tabShowText +"</button>";
+
+              }else{
+                tabShowText = '已关闭';
+                $(td).context.innerHTML="<button style='color: white;border:none;border-radius: 5px;background-color: #ff4949;line-height: 30px;text-align: center;width: 100px;font-size: 14px;'>"+ tabShowText +"</button>";
+
+              }
+            }
+          }]
+        } );//end 外圈  $('#example').DataTable
+          /*获取负责人下拉框内容*/
+        var sendData = {};
+        $.ajax({
+          url:"/YXcrm/aaEmp?qqiu=list",
+          Type:"GET",
+          contentTypt:"application/json;charset=UTF-8",
+          data:JSON.stringify(sendData),
+          success:function(msg){
+            xiala(msg);
+          }
+        });
+        function xiala(msg) {
+          var obj = {};
+          obj = JSON.parse(msg);
+          var objData = obj.data;
+          $('#empUuid').combobox({
+            data: objData,
+            valueField: 'uuid',
+            textField: 'name',
+            selectOnNavigation: false
+          })
+        }
+
+        $('#example tbody').on( 'click', 'button', function () {
+          var send_data = {};
+          send_data.uuid = table.row( $(this).parents('tr') ).data().uuid;
+          table.row( $(this).parents('tr') ).data().openAndclose == 'open'?send_data.openAndclose = 'close':send_data.openAndclose = 'open';
+
+          $.ajax({
+            url:"/YXcrm/aaYXstudent?qqiu=on_off",
+            type: "POST",
+            //data: JSON.stringify(param),
+            data: JSON.stringify(send_data),
+            contentType: "application/json;charset=UTF-8",
+            success:function(result){
+              var obj = JSON.parse(result);
+              alert(obj.message);
+              table.row( $(this).parents('tr') ).ajax.reload();
+
+            }
+
+          });//end $.ajax
+        } );//end 步骤1 外圈  $('#example').DataTable
+
+        //步骤2，列表选择
+        var selectTable = $('#example tbody').on( 'click', 'tr', function () {
+          if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+          }
+          else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+          }//end if
+
+        } );//end 外圈 $('#example tbody').on
+
+        //步骤3，删除按钮单击事件
+        $('#delbut').click( function () {
+
+          //要初始化一个对象，不然会报undifine未定义错误
+          var delRowData = {};
+          //获取选择那一行的数据
+          delRowData = table.row('.selected').data();
+          //获取选择行中的uuid字段
+          var Auuid = delRowData.uuid;
+
+          //post请求体传给后台的js对象
+          var send_data = {};
+          send_data.uuid=Auuid;
+          send_data.userUuid = $.cookie("ckUserEmpUuid");
+          send_data.userName = $.cookie("ckUserName");
+          // alert( "选择的行的uuid: "+send_data);
+          console.log(send_data);
+          //调用ajax方法传给后台接口
+          $.ajax({
+            url:"/YXcrm/aaYXstudent?qqiu=delete",
+            type: "POST",
+            //data: JSON.stringify(param),
+            data: JSON.stringify(send_data),
+            contentType: "application/json;charset=UTF-8",
+            success:function(result){
+              setTimeout(function(){
+                $('.alert-main').show(1000).delay(6000).hide(1000);
+              });
+                /*window.location.reload();*/
+
+            }
+
+          });//end $.ajax
+            /* 弹窗事件 */
+          table.row('.selected').remove().draw( false );//图形删除，没有传到后台接口
+        } );//end 外圈 $('#delbut').click
+
+        //步骤4，对话框初始配置
+        $( "#dialog" ).dialog({
+          autoOpen: false,
+          show: {
+            effect: "blind",
+            duration: 1000
+          },
+          hide: {
+            effect: "explode",
+            duration: 1000
+          }
+        });//end dialog
+        $( "#dialog-num" ).dialog({
+          autoOpen: false,
+          show: {
+            effect: "blind",
+            duration: 1000
+          },
+          hide: {
+            effect: "explode",
+            duration: 1000
+          }
+        });//end dialog
+
+        //步骤5，编辑打开事件
+        $( "#opener" ).click(function() {
+          //要初始化一个对象，不然会报undifine未定义错误
+          var delRowData = {};
+          //获取选择那一行的数据
+          delRowData = table.row('.selected').data();
+          console.log(delRowData);
+          document.ffname2a2.name.value= delRowData.name;
+          document.ffname2a2.sex.value= delRowData.sex;
+          document.ffname2a2.weixin.value= delRowData.weixin;
+          document.ffname2a2.phone.value= delRowData.phone;
+          document.ffname2a2.school.value= delRowData.school;
+          document.ffname2a2.grade.value= delRowData.grade;
+          $('#empUuid').combobox("setValue",delRowData.empUuid);
+          document.ffname2a2.rank.value= delRowData.rank;
+          document.ffname2a2.source.value= delRowData.source;
+          document.ffname2a2.courseYX.value= delRowData.courseYX;
+          document.ffname2a2.parentName.value= delRowData.parentName;
+          document.ffname2a2.parentName2.value= delRowData.parentName2;
+          document.ffname2a2.parentPhone.value= delRowData.parentPhone;
+          document.ffname2a2.parentPhone2.value= delRowData.parentPhone2;
+          document.ffname2a2.parentRela.value= delRowData.parentRela;
+          document.ffname2a2.parentRela2.value= delRowData.parentRela2;
+          document.ffname2a2.parentWeixin.value= delRowData.parentWeixin;
+          document.ffname2a2.parentWeixin2.value= delRowData.parentWeixin2;
+
+          //调用父级弹窗start
+          // var $parent = self.parent.$;
+          // $parent('#pwin').window({
+          //     modal:true,
+          //     width:1000,
+          //     height:800,
+          //     // content:$('#dialog').html(),
+          //     content:$( "#dialog" ).dialog( "open" ).html(),
+          //     title:'父级窗口'
+          // });
+          //调用父级弹窗end
+          // $( "#dialog" ).dialog( "open" );
+          // $('#dialog').show();
+          $('#dialog').dialog('open');
+          $.cookie('ck_uuid_ditch', delRowData.uuid);//uuid
+          $.cookie('ck_name', delRowData.name);//姓名
+          $.cookie('ck_phone', delRowData.phone);//电话
+          $.cookie('ck_weixin', delRowData.weixin);//微信
+          $.cookie('ck_empName', delRowData.empName);//负责人
+          $.cookie('ck_rank', delRowData.rank);//等级
+          $.cookie('ck_school', delRowData.school);//单位
+          $.cookie('ck_grade', delRowData.grade);//工作
+          console.log($.cookie());
+
+
+        });//end opener 结束打开对话框
+        //修改学号打开事件
+        $( "#editNum" ).click(function() {
+          //要初始化一个对象，不然会报undifine未定义错误
+          var delRowData = {};
+          //获取选择那一行的数据
+          delRowData = table.row('.selected').data();
+          console.log(delRowData);
+          document.formNum.studentID.value= delRowData.studentID;
+          $('#dialog-num').dialog('open');
+        });//end opener 结束打开对话框
+
+        //步骤6，编辑确定事件
+        $( "#submitForm" ).click(function() {
+          //要初始化一个对象，不然会报undifine未定义错误
+          var delRowData = {};
+          //获取选择那一行的数据
+          delRowData = table.row('.selected').data();
+          // var param = $("#ff").serializeObject();
+          var send_edit_data = {};
+          send_edit_data = $("#ffname2a2").serializeObject();
+          send_edit_data.uuid = delRowData.uuid;
+          send_edit_data.userUuid = $.cookie("ckUserEmpUuid");
+          send_edit_data.userName = $.cookie("ckUserName");
+          console.log(send_edit_data);
+           $.ajax({
+             url:"/YXcrm/aaYXstudent?qqiu=edit",
+             type: "POST",
+             //data: JSON.stringify(param),
+             data: JSON.stringify(send_edit_data),
+             contentType: "application/json;charset=UTF-8",
+             success:function(result){
+               var obj = JSON.parse(result);
+               alert(obj.message);
+               table.ajax.reload();
+               $( "#dialog" ).dialog( "close" );
+             }
+
+           });
+
+
+        });//end submitForm
+        //步骤6，修改学号确定事件
+        $( "#confirm-d" ).click(function() {
+          //要初始化一个对象，不然会报undifine未定义错误
+          var delRowData = {};
+          //获取选择那一行的数据
+          delRowData = table.row('.selected').data();
+          // var param = $("#ff").serializeObject();
+          var send_edit_data = {};
+          send_edit_data = $("#formNum").serializeObject();
+          send_edit_data.uuid = delRowData.uuid;
+          console.log(send_edit_data);
+          $.ajax({
+            url:"/YXcrm/aaYXstudent?qqiu=editstuID",
+            type: "POST",
+            //data: JSON.stringify(param),
+            data: JSON.stringify(send_edit_data),
+            contentType: "application/json;charset=UTF-8",
+            success:function(result){
+              var obj = JSON.parse(result);
+              alert(obj.message);
+              table.ajax.reload();
+              $( "#dialog-num" ).dialog( "close" );
+            }
+
+          });
+
+
+        });//end submitForm
+          /*渠道链接跳转*/
+        $('#genjin').click(function(){
+          var delRowData = {};
+          delRowData = table.row('.selected').data();
+          console.log(delRowData);
+          $.cookie('ck_uuid_ditch', delRowData.uuid);//工作
+          $.cookie('ck_parentName', delRowData.parentName);//uuid
+          $.cookie('ck_parentPhone', delRowData.parentPhone);//uuid
+          $.cookie('ck_name', delRowData.name);//姓名
+          $.cookie('ck_phone', delRowData.phone);//电话
+          $.cookie('ck_weixin', delRowData.weixin);//微信
+          $.cookie('ck_empName', delRowData.empName);//负责人
+          $.cookie('ck_rank', delRowData.rank);//等级
+          $.cookie('ck_school', delRowData.school);//单位
+          $.cookie('ck_grade', delRowData.grade);//工作
+          console.log($.cookie());
+          window.location.href="YX_1a2_gx1.html";
+        });
+
+        //步骤7，关闭修改对话框
+        $( "#close" ).click(function() {
+          // alert("进入关闭方法");
+
+          $( "#dialog" ).dialog( "close" );
+
+          // //调用父级弹窗start
+          //     var $parent = self.parent.$;
+          //     $parent('#pwin').style.display = "none";
+          //调用父级弹窗end
+          // parent.document.getElementById("#pwin").style.display="none";
+          // alert("调了关闭方法");
+
+        });//end 7 外圈 close
+        //步骤7，关闭修改学号对话框
+        $( "#close-d" ).click(function() {
+          $( "#dialog-num" ).dialog( "close" );
+        });//end 7 外圈 close
+
+
+
+
+      } );//end 最外层 $(document).ready
+
+
+    </script>
+</head>
+<body>
+
+<div id="fen3a3_container" class="tab-con">
+    <div id="ye_1_blank"></div>
+    <div id="ye_2_blank"></div>
+    <div id="ye_3_text_container">
+        <div id="header_1">
+            <h2>管理意向学员</h2>
+        </div>
+        <div style="position: relative;z-index: 999;width:500px;">
+            <button id="opener" class="btn-class">编辑</button>
+            <button id="editNum" class="btn-class">修改学号</button>
+            <button id="genjin" class="btn-class">学员跟进</button>
+            <button id="delbut" class="btn-class" style="background-color: red;">删除</button>
+        </div>
+        <!--start div id="listTable" 列表展示开始 -->
+        <div id="listTable">
+            <table id="example" class="display tab-mians" cellspacing="0" width="100%">
+                <thead class="tab-tit">
+                <tr>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>负责人</th>
+                    <th>学员手机</th>
+                    <th>家长手机</th>
+                    <th>意向等级</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <!--<tbody class="tab-body">-->
+                <!--</tbody>-->
+                <tfoot class="tab-tit">
+                <tr>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>负责人</th>
+                    <th>学员手机</th>
+                    <th>家长手机</th>
+                    <th>意向等级</th>
+                    <th>状态</th>
+                </tr>
+                </tfoot>
+            </table>
+
+        </div><!--end div id="listTable" 列表展示结束 -->
+
+
+
+
+
+    </div><!-- end div id="ye_3_text_container" -->
+
+</div><!-- end div  id="fen3a3_container"-->
+
+<div id="dialog" title="修改" closed="true" class="easyui-dialog"  style="width:980px;height: 700px;padding-left:20px;">
+    <div  class="tit_style">
+        <h3>基础信息</h3>
+    </div>
+    <form id="ffname2a2" name="ffname2a2" method="post" >
+        <table class="tab-style">
+                <!-- 第一行 -->
+                <tr>
+            <td class="name-s" style="padding-left:0">姓名</td>
+            <td><input  type="text" name="name" class="yz-box yzss" placeholder="请输入姓名"></td>
+            <td class="name-s">性别</td>
+            <td>
+              <select  name="sex" class="yz-box yzss sel_s">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+            </td>
+            <td class="name-s">手机</td>
+            <td><input  type="text" name="phone" id="phone" class="yzss" placeholder="请输入电话号码" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></td>
+            </tr>
+            <!-- 第一行结束 -->
+                </table>
+          <table class="tab-style">
+            <!-- 第一行 -->
+            <tr>
+              <td class="name-s" style="padding:0;width:52px;">年级</td>
+              <td><input  type="text" name="grade" class="yz-box yzss" placeholder="请输入年级"></td>
+              <td class="name-s" style="padding-right: 0;padding-left:58px; ">就读学校</td>
+              <td style="margin-left:20px;"><input  type="text" name="school" class="yz-box yzss" placeholder="请输入目前就读学校"></td>
+              <td class="name-s" style="padding-right: 20px;padding-left:70px; ">微信</td>
+              <td style="margin-left:20px;"><input  type="text" name="weixin" class="yz-box yzss" placeholder="请输入微信号"></td>
+            </tr>
+            <!-- 第一行结束 -->
+          </table>
+          <div class="tit_style">
+            <h3>家长信息</h3>
+          </div>
+          <table class="tab-style">
+            <!-- 第一行 -->
+            <tr>
+              <td class="name-s" style="padding-left:0px">关系</td>
+              <td><input  type="text" name="parentRela" style="width:89px;" class="yz-box yzss" value="无"></td>
+              <td class="name-s"style="padding-left:48px">姓名</td>
+              <td><input  type="text" name="parentName" style="width:89px;" class="yz-box yzss" value="无"></td>
+              <td class="name-s"style="padding-left:49px">手机</td>
+              <td><input  type="text" name="parentPhone"class="yzss"style="width:180px;" value="无" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></td>
+              <td class="name-s"style="padding-left:49px">微信</td>
+              <td><input  type="text" class="yzss" style="width:180px;"name="parentWeixin" value="无"placeholder="请输入微信号"></td>
+            </tr>
+            <!-- 第一行结束 -->
+          </table>
+          <table class="tab-style">
+            <!-- 第一行 -->
+            <tr>
+              <td class="name-s" style="padding-left:0px;padding-right:12px;">关系2</td>
+              <td><input  type="text" name="parentRela2" style="width:89px;" class="yz-box yzss" value="无"></td>
+              <td class="name-s" style="padding-left:40px;">姓名2</td>
+              <td><input  type="text" name="parentName2" style="width:89px;" class="yz-box yzss" value="无"></td>
+              <td class="name-s" style="padding-right: 21px;padding-left:40px;">手机2</td>
+              <td><input  type="text" class="yzss"name="parentPhone2"style="width:180px;" value="无" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></td>
+              <td class="name-s"style="padding-right: 21px;padding-left:40px">微信2</td>
+              <td><input  type="text" class="yzss" name="parentWeixin2"style="width:180px;"value="无"placeholder="请输入微信号"></td>
+            </tr>
+            <!-- 第一行结束 -->
+          </table>
+                <div class="tit_style">
+            <h3>其他信息</h3>
+          </div>
+                <table class="tab-style">
+                <!-- 第一行 -->
+                <tr>
+            <td class="name-s" style="padding:0;width:65px;">负责人</td>
+            <td style="margin-left:20px;">
+            <input id="empUuid" name="empUuid" data-options="editable:true" class="easyui-combobox yzss" style="width: 200px; height: 36px; color:#646464; display: none;" comboname="empUuid">
+          </td>
+            <td class="name-s" style="padding-right: 0;padding-left:90px; ">意向等级</td>
+            <td style="margin-left:20px;">
+              <select  name="rank" class="yz-box yzss sel_s">
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+              </select>
+            </td>
+
+            </tr>
+            <!-- 第一行结束 -->
+          </table>
+          <table class="tab-style">
+            <tr>
+              <td class="name-s" style="padding-left:0;padding-right: 1px;">渠道来源</td>
+              <td><input  type="text" name="source" class="yzss" style="width:840px;" placeholder="请输入渠道来源"></td>
+            </tr>
+            <tr>
+              <td class="name-s" style="padding-left:0;padding-right: 1px;">课程意向</td>
+              <td><input  type="text" name="courseYX" class="yzss" style="width:840px;" value="无"></td>
+            </tr>
+            <!-- 第二行结束 -->
+          </table>
+    </form>
+    <!-- 按钮div开始 -->
+    <div class="btn-box" style="margin-right: 20px;margin-bottom: 20px;">
+        <button  class="easyui-linkbutton btn-xk" id="close">关闭</button>
+        <button  class="easyui-linkbutton btn-qr" id="submitForm">确认</button>
+    </div>
+    <!-- 按钮div结束 -->
+</div><!-- end id=dialog -->
+
+<!-- S--公用弹窗 -->
+<div class="alert-main">
+    <p class="alert-con">此条学生信息已删除</p>
+    <a class="close-item">×</a>
+</div>
+<!--修改学号弹窗-->
+<div id="dialog-num" title="修改学号" class="easyui-dialog" closed="true" style="width:400px;height: 195px;padding-left: 20px;left:300px;top:160px;">
+    <form id="formNum" name="formNum">
+        <table class="tab-style">
+            <tr>
+                <td class="name-s" style="padding-left:0">学生学号</td>
+                <td><input type="text" name="studentID" class="yzss" style="width:250px;" value="请输入姓名"></td>
+            </tr>
+        </table>
+    </form>
+    <div class="btn-box" style="margin-right: 27px;">
+        <button id="close-d"  class="easyui-linkbutton btn-xk">关闭</button>
+        <button id="confirm-d" class="easyui-linkbutton btn-qr">确认</button>
+    </div>
+</div>
+<!-- E--编辑弹窗 -->
+<script>
+  $(function () {
+    $('.close-item').click(function(){
+      $('.alert-main').hide()
+    });
+  });
+  <!--修改日期输入框样式-->
+  $(function(){
+    $('.combo .combo-text').css({
+      "fontSize":"16px",
+      "color":"#464646",
+      "paddingLeft":"10px",
+      "boxSizing":"border-box"
+    });
+    $('.combo').css("borderRadius","5px");
+  });
+</script>
+<!-- E--公用弹窗 -->
+
+</body>
+</html>
