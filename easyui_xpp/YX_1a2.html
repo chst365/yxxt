@@ -68,7 +68,7 @@
       else
       {
         alert("没有登陆");
-        window.location.href="../login.html";
+        // window.location.href="../login.html";
       }
       $(document).ready(function() {
 
@@ -79,25 +79,27 @@
           //判断已经退出登陆
           if ($.cookie("rsList") == "") {
             console.log("检测没有权限，重新登录或联系管理员");
-            window.location.href = "../login.html";
+            // window.location.href = "../login.html";
           }
           console.log("jquery里检测已经登陆");
         }
         else {
           console.log("jquery里检测没有登陆");
-          window.location.href = "../login.html";
+          // window.location.href = "../login.html";
         }
         //按钮权限开始
         function funBtn(){
           $( "#opener" ).hide();
           $( "#delbut" ).hide();
           $( "#genjin" ).hide();
+          $( "#editNum" ).hide();
           var viewArr = $.cookie("rsList").split(",");
           for (var i = 0; i < viewArr.length; i++) {
             if(viewArr[i]=="Ab1") {$( "#opener" ).show();}
             if(viewArr[i]=="Ab2") {$( "#genjin" ).show();}
             if(viewArr[i]=="Ab3") {$( "#delbut" ).show();}
-          }//end for
+            if(viewArr[i]=="Ab4") {$( "#editNum" ).show();}
+          }//end foreditNum
         }
         funBtn();
           /*第零步：把datatables插件的警告窗变成控制台打印*/
@@ -136,6 +138,7 @@
           "ajax": "/YXcrm/aaYXstudent?qqiu=list",
           "columns": [
             { "data": "name" },
+//            { "data": "nameTyxname" },
             { "data": "studentID" },
             { "data": "empName" },
             { "data": "phone" },
@@ -363,6 +366,8 @@
           send_edit_data.uuid = delRowData.uuid;
           send_edit_data.userUuid = $.cookie("ckUserEmpUuid");
           send_edit_data.userName = $.cookie("ckUserName");
+          var  aInt=delRowData.studentID; 
+          send_edit_data.studentID = aInt.toString();//ping0313编辑增加传学号
           console.log(send_edit_data);
            $.ajax({
              url:"/YXcrm/aaYXstudent?qqiu=edit",
@@ -391,6 +396,7 @@
           var send_edit_data = {};
           send_edit_data = $("#formNum").serializeObject();
           send_edit_data.uuid = delRowData.uuid;
+          send_edit_data.name = delRowData.name;//ping0313编辑增加传学员名字
           console.log(send_edit_data);
           $.ajax({
             url:"/YXcrm/aaYXstudent?qqiu=editstuID",
@@ -476,6 +482,7 @@
                 <thead class="tab-tit">
                 <tr>
                     <th>姓名</th>
+                    <!--<th>别名</th>-->
                     <th>学号</th>
                     <th>负责人</th>
                     <th>学员手机</th>
@@ -489,6 +496,7 @@
                 <tfoot class="tab-tit">
                 <tr>
                     <th>姓名</th>
+                    <!--<th>别名</th>-->
                     <th>学号</th>
                     <th>负责人</th>
                     <th>学员手机</th>
@@ -519,7 +527,7 @@
                 <tr>
             <td class="name-s" style="padding-left:0">姓名</td>
             <td><input  type="text" name="name" class="yz-box yzss" placeholder="请输入姓名"></td>
-            <td class="name-s">性别</td>
+            <td class="name-s" style="padding-left: 58px;padding-right: 0">性&emsp;&emsp;别</td>
             <td>
               <select  name="sex" class="yz-box yzss sel_s">
               <option value="男">男</option>
@@ -549,13 +557,13 @@
           <table class="tab-style">
             <!-- 第一行 -->
             <tr>
-              <td class="name-s" style="padding-left:0px">关系</td>
+              <td class="name-s" style="padding-left:0;padding-right: 12px;">关&ensp;系</td>
               <td><input  type="text" name="parentRela" style="width:89px;" class="yz-box yzss" value="无"></td>
-              <td class="name-s"style="padding-left:48px">姓名</td>
+              <td class="name-s" style="padding-left:48px;padding-right: 12px;">姓&ensp;名</td>
               <td><input  type="text" name="parentName" style="width:89px;" class="yz-box yzss" value="无"></td>
-              <td class="name-s"style="padding-left:49px">手机</td>
+              <td class="name-s" style="padding-left:49px;padding-right: 12px;">手&ensp;机</td>
               <td><input  type="text" name="parentPhone"class="yzss"style="width:180px;" value="无" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></td>
-              <td class="name-s"style="padding-left:49px">微信</td>
+              <td class="name-s" style="padding-left:49px;padding-right: 12px;">微&ensp;信</td>
               <td><input  type="text" class="yzss" style="width:180px;"name="parentWeixin" value="无"placeholder="请输入微信号"></td>
             </tr>
             <!-- 第一行结束 -->
@@ -565,11 +573,11 @@
             <tr>
               <td class="name-s" style="padding-left:0px;padding-right:12px;">关系2</td>
               <td><input  type="text" name="parentRela2" style="width:89px;" class="yz-box yzss" value="无"></td>
-              <td class="name-s" style="padding-left:40px;">姓名2</td>
+              <td class="name-s" style="padding-left:49px;padding-right: 12px;">姓名2</td>
               <td><input  type="text" name="parentName2" style="width:89px;" class="yz-box yzss" value="无"></td>
-              <td class="name-s" style="padding-right: 21px;padding-left:40px;">手机2</td>
+              <td class="name-s" style="padding-left:49px;padding-right: 12px;">手机2</td>
               <td><input  type="text" class="yzss"name="parentPhone2"style="width:180px;" value="无" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></td>
-              <td class="name-s"style="padding-right: 21px;padding-left:40px">微信2</td>
+              <td class="name-s"style="padding-left:49px;padding-right: 12px;">微信2</td>
               <td><input  type="text" class="yzss" name="parentWeixin2"style="width:180px;"value="无"placeholder="请输入微信号"></td>
             </tr>
             <!-- 第一行结束 -->

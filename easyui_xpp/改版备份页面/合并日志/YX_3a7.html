@@ -58,7 +58,7 @@
 <div class="tab-con">
     <div id="header_1" style="overflow: hidden;position: relative;z-index: 10;" >
         <h2 class="tit-tit" style="float: left;padding-bottom: 0;line-height: 40px;">学员日志</h2>
-        <select id="txt-toggle" class="sel_s" style="float: left;margin-left: 20px;line-height: 36px;border:1px solid #d9d9d9;padding-left: 10px;border-radius: 5px;color:#646464;font-size:16px;width:110px;height: 36px;">
+        <select id="txt-toggle" class="sel_s" style="float: left;margin-left: 20px;line-height: 36px;border:1px solid #d9d9d9;padding-left: 10px;border-radius: 5px;color:#646464;font-size:16px;width:110px;">
             <option>学员日志</option>
             <option>跟踪日志</option>
         </select>
@@ -71,9 +71,9 @@
         <thead class="tab-tit">
             <tr>
                 <th>用户名</th>
-                <!-- <th>操作数据库表名</th> -->
-                <th>菜单名</th>
-                <th>学员名</th>
+                <th>操作数据库表名</th>
+                <th>操作数据库表中文名</th>
+                <th>操作数据中文名</th>
                 <th>操作行为</th>
                 <th>操作时间</th>
                 <th>跟踪备注</th>
@@ -84,9 +84,9 @@
         <tfoot class="tab-tit">
             <tr>
                 <th>用户名</th>
-                <!-- <th>操作数据库表名</th> -->
-                <th>菜单名</th>
-                <th>学员名</th>
+                <th>操作数据库表名</th>
+                <th>操作数据库表中文名</th>
+                <th>操作数据中文名</th>
                 <th>操作行为</th>
                 <th>操作时间</th>
                 <th>跟踪备注</th>
@@ -133,7 +133,7 @@
             $("#adm-user").dataTable().fnDestroy();
             tabData = $("#adm-user").DataTable({
                 "dom":'frtpi',
-                "order": [[ 4, "desc" ]],
+                "order": [[ 5, "desc" ]],
                 "bLengthChange":false,
                 bSort:true,
                 language: {
@@ -163,7 +163,7 @@
                 data:objData,
                 columns:[
                     {"data":"userName"},
-                    // { "data":"tableName"},
+                    { "data":"tableName"},
                     { "data":"tableNameChina"},
                     { "data":"dataName"},
                     { "data":"userAction"},
