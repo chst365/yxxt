@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>CRM启动页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- 老的 -->
+    <script src="assets/js/jquery-1.8.2.min.js"></script>
+
+
+    <link rel="stylesheet" href="assets/css/reset.css">
+
+
+    <script type="text/javascript">
+
+
+    </script>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            font-family: "黑体";
+        }
+        body{
+            background: #F2F2F2;
+        }
+        .page-container{
+            width:750px;
+            height:510px;
+            position: absolute;
+            left:50%;
+            top:50%;
+            margin-left:-375px;
+            margin-top:-255px;
+            background-color: white;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            -webkit-box-shadow: 0 0 5px #ccc;
+            -moz-box-shadow: 0 0 5px #ccc;
+            box-shadow: 0 0 5px #ccc;
+            z-index: 99;
+        }
+        img{
+            border:none;
+            max-width: 100%;
+        }
+        .logo-box{
+            width:173px;
+            height:136px;
+            margin:0 auto;
+        }
+        .page-container>div{
+            float:left;
+            margin:0 99px;
+            margin-top:70px;
+            border:2px solid #f2f2f2;
+            border-radius:10px;
+        }
+        .page-container>div:hover{
+            border-color: #d7d7d7;
+            cursor:pointer;
+        }
+        .title{
+            text-align:center;
+            font-size:20px;
+            line-height:80px;
+            margin-top:60px;
+        }
+    </style>
+</head>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $("#qdcrm").click(function(){
+        window.location.href='../QDcrm/login.html';
+
+      })
+      $("#yxcrm").click(function(){
+        window.location.href='login.html';
+
+      })
+    })
+</script>
+<body>
+
+<div class="page-container">
+    <p class="title">CRM启动选择页</p>
+    <div id="qdcrm">
+        <div class="logo-box">
+            <img src="HMcode_YX/HMimages/logo-l.png">
+            <p style="text-align:center;color: #4A4A4A;font-size:20px;">渠道CRM</p>
+        </div>
+        <p style="height: 40px"></p>
+    </div>
+    <div id="yxcrm">
+        <div class="logo-box">
+            <img src="HMcode_YX/HMimages/logo-l.png">
+            <p style="text-align:center;color: #4A4A4A;font-size:20px;">新生CRM</p>
+        </div>
+        <p style="height: 40px"></p>
+    </div>
+</div>
+
+
+</div>
+
+<!-- Javascript -->
+
+<!--<p class="copy-right">版权：上海浅枫计算机网络</p>-->
+</body>
+
+</html>
+

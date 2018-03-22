@@ -191,24 +191,30 @@
          var send_data = {};
          send_data.uuid = Auuid;
          // alert( "选择的行的uuid: "+send_data);
-         //调用ajax方法传给后台接口
-         $.ajax({
-                
+        var msg = "确定要删除吗？";
+        if(confirm(msg) == true){
+            //调用ajax方法传给后台接口
+            $.ajax({
+
                 url:"/YXcrm/aaDepartment?qqiu=delete",
                 type: "POST",
                 //data: JSON.stringify(param),
                 data: JSON.stringify(send_data),
-                contentType: "application/json;charset=UTF-8", 
+                contentType: "application/json;charset=UTF-8",
                 success:function(result){
                     var obj = JSON.parse(result);
                     alert(obj.message);
                     window.location.reload();
 
                 }
-             
+
             });//end $.ajax
 
-         table.row('.selected').remove().draw( false );//图形删除，没有传到后台接口
+            table.row('.selected').remove().draw( false );//图形删除，没有传到后台接口
+        }else {
+            return false
+        }
+
     } );//end 3 外圈 $('#delbut').click
 
     //步骤4，对话框初始配置

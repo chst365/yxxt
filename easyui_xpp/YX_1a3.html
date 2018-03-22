@@ -104,7 +104,7 @@
             if(viewArr[i]=="Ac1") {$( "#opener" ).show();}
             if(viewArr[i]=="Ac2") {$( "#genjin" ).show();}
             if(viewArr[i]=="Ac3") {$( "#delbut" ).show();}
-            if(viewArr[i]=="Ac4") {$( "#editNum" ).show();}
+//            if(viewArr[i]=="Ac4") {$( "#editNum" ).show();}
           }//end for
         }
         funBtn();
@@ -144,12 +144,14 @@
           "ajax": aUrl,
           "columns": [
             { "data": "name" },
+            { "data": "rank" },
 //            { "data": "nameTyxname" },
-            { "data": "studentID" },
+//            { "data": "studentID" },
             { "data": "empName" },
             { "data": "phone" },
             { "data": "parentPhone" },
-            { "data": "rank" },
+            { "data": "createDate" },
+            { "data": "modifyDate" },
             {
               "data": null,
               "searchable": true,
@@ -252,25 +254,31 @@
           send_data.userUuid = $.cookie("ckUserEmpUuid");
           send_data.userName = $.cookie("ckUserName");
           // alert( "选择的行的uuid: "+send_data);
-          //调用ajax方法传给后台接口
-          $.ajax({
+            var msg = "确定要删除吗？";
+            if(confirm(msg) == true){
+                //调用ajax方法传给后台接口
+                $.ajax({
 
-            url:"/YXcrm/aaYXstudent?qqiu=delete",
-            type: "POST",
-            //data: JSON.stringify(param),
-            data: JSON.stringify(send_data),
-            contentType: "application/json;charset=UTF-8",
-            success:function(result){
-              setTimeout(function(){
-                $('.alert-main').show(1000).delay(6000).hide(1000);
-              });
-                /*window.location.reload();*/
+                    url:"/YXcrm/aaYXstudent?qqiu=delete",
+                    type: "POST",
+                    //data: JSON.stringify(param),
+                    data: JSON.stringify(send_data),
+                    contentType: "application/json;charset=UTF-8",
+                    success:function(result){
+                        setTimeout(function(){
+                            $('.alert-main').show(1000).delay(6000).hide(1000);
+                        });
+                        /*window.location.reload();*/
 
+                    }
+
+                });//end $.ajax
+                /* 弹窗事件 */
+                table.row('.selected').remove().draw( false );//图形删除，没有传到后台接口
+            }else {
+                return false;
             }
 
-          });//end $.ajax
-            /* 弹窗事件 */
-          table.row('.selected').remove().draw( false );//图形删除，没有传到后台接口
         } );//end 外圈 $('#delbut').click
 
         //步骤4，对话框初始配置
@@ -472,7 +480,7 @@
         </div>
         <div style="position: relative;z-index: 999;width:500px;">
             <button id="opener" class="btn-class">编辑</button>
-            <button id="editNum" class="btn-class">修改学号</button>
+            <button id="editNum" class="btn-class"style="display:none;">修改学号</button>
             <button id="genjin" class="btn-class">学员跟进</button>
             <button id="delbut" class="btn-class" style="background-color: red;">删除</button>
         </div>
@@ -481,13 +489,13 @@
             <table id="example" class="display tab-mians" cellspacing="0" width="100%">
                 <thead class="tab-tit">
                 <tr>
-                    <th>姓名</th>
-                    <!--<th>别名</th>-->
-                    <th>学号</th>
-                    <th>负责人</th>
-                    <th>学员手机</th>
-                    <th>家长手机</th>
-                    <th>意向等级</th>
+                    <th style="min-width: 80px;">姓名</th>
+                    <th style="min-width: 70px;">意向等级</th>
+                    <th style="min-width: 80px;">负责人</th>
+                    <th style="min-width: 90px;">学员手机</th>
+                    <th style="min-width: 90px;">家长手机</th>
+                    <th style="min-width: 190px;">创建时间</th>
+                    <th style="min-width: 190px;">最近更新时间</th>
                     <th>状态</th>
                 </tr>
                 </thead>
@@ -495,13 +503,13 @@
                 <!--</tbody>-->
                 <tfoot class="tab-tit">
                 <tr>
-                    <th>姓名</th>
-                    <!--<th>别名</th>-->
-                    <th>学号</th>
-                    <th>负责人</th>
-                    <th>学员手机</th>
-                    <th>家长手机</th>
-                    <th>意向等级</th>
+                    <th style="min-width: 80px;">姓名</th>
+                    <th style="min-width: 70px;">意向等级</th>
+                    <th style="min-width: 80px;">负责人</th>
+                    <th style="min-width: 90px;">学员手机</th>
+                    <th style="min-width: 90px;">家长手机</th>
+                    <th style="min-width: 190px;">创建时间</th>
+                    <th style="min-width: 190px;">最近更新时间</th>
                     <th>状态</th>
                 </tr>
                 </tfoot>

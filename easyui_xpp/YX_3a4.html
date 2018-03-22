@@ -178,22 +178,27 @@
         $("#btn-del").click(function(){
             var delTableTr = {};
             delTableTr = tabData.row(".selected").data();
-            tabData.row(".selected").remove().draw(false);//在页面进行删除操作
             var delCon = delTableTr.uuid;
             var delData = {};
             delData.uuid = delCon;
-            /* ajax调用数据接口 */
-            $.ajax({
-                url:"/YXcrm/aaRole?qqiu=delete",
-                type:"POST",
-                data:JSON.stringify(delData),
-                contentType:"application/json;charset=UTF-8",
-                success:function(result){
-                    var obj = JSON.parse(result);
-                    alert(obj.message);
-                    window.location.reload();//页面刷新
-                }
-            });
+            var msg = "确定删除吗？";
+            if(confirm(msg) == true){
+                /* ajax调用数据接口 */
+                $.ajax({
+                    url:"/YXcrm/aaRole?qqiu=delete",
+                    type:"POST",
+                    data:JSON.stringify(delData),
+                    contentType:"application/json;charset=UTF-8",
+                    success:function(result){
+                        var obj = JSON.parse(result);
+                        alert(obj.message);
+                        window.location.reload();//页面刷新
+                    }
+                });
+            }else {
+                return false
+            }
+
         });
         /* 第四步：点击编辑按钮出现弹窗 */
         //获取选中行的值，并把值给到弹窗相应的位置
